@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Heart </title>
+<style>
+  body { margin: 0; background: #000; overflow: hidden; }
+  canvas { display: block; }
+  h1 {
+    position: absolute; top: 90%; width: 100%;
+    text-align: center; color: #ff00ff; font-family: Arial;
+    font-size: 28px; text-shadow: 0 0 20px #ff00ff;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<h1>For You ❤️</h1>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let t = 0;
+let points = [];
+
+function heart(x, scale) {
+  return [
+    canvas.width/2 + 16 * Math.pow(Math.sin(x), 3) * scale,
+    canvas.height/2 - (13 * Math.cos(x) - 5 * Math.cos(2*x) - 2 * Math.cos(3*x) - Math.cos(4*x)) * scale
+  ];
+}
+
+function draw() {
+  ctx.fillStyle = 'rgba(0,0,0,0.1)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.strokeStyle = '#ff00ff';
+  ctx.shadowBlur = 20;
+  ctx.shadowColor = '#ff00ff';
+  ctx.lineWidth = 2;
+  
+  if(t < Math.PI * 2) {
+    let [x, y] = heart(t, 15);
+    points.push([x,y]);
+    t += 0.05;
+  }
+  
+  ctx.beginPath();
+  for(let i=0; i<points.length; i++){
+    if(i==0) ctx.moveTo(points[i][0], points[i][1]);
+    else ctx.lineTo(points[i][0], points[i][1]);
+  }
+  ctx.stroke();
+  
+  if(t >= Math.PI * 2) { t = 0; points = []; }
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>
